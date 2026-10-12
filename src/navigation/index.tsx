@@ -1,106 +1,73 @@
-import {
-  createBottomTabNavigator,
-  createBottomTabScreen,
-} from '@react-navigation/bottom-tabs';
-import { HeaderButton, Text } from '@react-navigation/elements';
-import { createStaticNavigation } from '@react-navigation/native';
-import {
-  createNativeStackNavigator,
-  createNativeStackScreen,
-} from '@react-navigation/native-stack';
+import * as React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Appbar, Switch, MD3DarkTheme, MD3LightTheme, adaptNavigationTheme } from 'react-native-paper';
+import { createStaticNavigation, DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image } from 'react-native';
 import bell from '../assets/bell.png';
 import newspaper from '../assets/newspaper.png';
 import { Home } from './screens/Home';
 import { NotFound } from './screens/NotFound';
-import { Profile } from './screens/Profile';
-import { Settings } from './screens/Settings';
-import { Updates } from './screens/Updates';
+
+const { LightTheme, DarkTheme } = adaptNavigationTheme({
+  reactNavigationLight: NavigationDefaultTheme,
+  reactNavigationDark: NavigationDarkTheme,
+});
+
+const CombinedDefaultTheme = { ...MD3LightTheme, ...LightTheme };
+const CombinedDarkTheme = { ...MD3DarkTheme, ...DarkTheme };
+
+export const PreferencesContext = React.createContext({
+  toggleTheme: () => {},
+  isThemeDark: false,
+});
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
-    Home: createBottomTabScreen({
+    Home: {
       screen: Home,
       options: {
-        title: 'Feed',
+        title: 'Home',
         tabBarIcon: ({ color, size }) => (
-          <Image
-            source={newspaper}
-            tintColor={color}
-            style={{
-              width: size,
-              height: size,
-            }}
-          />
+          <Image source={newspaper} style={{ width: size, height: size, tintColor: color }} />
         ),
       },
-    }),
-    Updates: createBottomTabScreen({
-      screen: Updates,
-      options: {
-        tabBarIcon: ({ color, size }) => (
-          <Image
-            source={bell}
-            tintColor={color}
-            style={{
-              width: size,
-              height: size,
-            }}
-          />
-        ),
-      },
-    }),
+    },
   },
 });
 
 const RootStack = createNativeStackNavigator({
   screens: {
-    HomeTabs: createNativeStackScreen({
+    HomeTabs: {
       screen: HomeTabs,
-      options: {
-        title: 'Home',
-        headerShown: false,
-      },
-    }),
-    Profile: createNativeStackScreen({
-      screen: Profile,
-      linking: {
-        path: ':user(@[a-zA-Z0-9-_]+)',
-        parse: {
-          user: (value) => value.replace(/^@/, ''),
-        },
-        stringify: {
-          user: (value) => `@${value}`,
-        },
-      },
-    }),
-    Settings: createNativeStackScreen({
-      screen: Settings,
-      options: ({ navigation }) => ({
-        presentation: 'modal',
-        headerRight: () => (
-          <HeaderButton onPress={navigation.goBack}>
-            <Text>Close</Text>
-          </HeaderButton>
-        ),
-      }),
-    }),
-    NotFound: createNativeStackScreen({
+      options: { title: 'Home', headerShown: false },
+    },
+    NotFound: {
       screen: NotFound,
-      options: {
-        title: '404',
-      },
-      linking: {
-        path: '*',
-      },
-    }),
+      options: { title: '404' },
+      linking: { path: '*' },
+    },
   },
 });
 
+const Header = ({ theme, isThemeDark, toggleTheme }: { theme?: any; isThemeDark: boolean; toggleTheme: () => void }) => (
+  <Appbar.Header theme={{ colors: { primary: theme?.colors.surface } }}>
+    <Switch color={'red'} value={isThemeDark} onValueChange={toggleTheme} />
+  </Appbar.Header>
+);
+
 export const Navigation = createStaticNavigation(RootStack);
 
-type RootStackType = typeof RootStack;
+export default function App() {
+  const [isThemeDark, setIsThemeDark] = React.useState(false);
+  const theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
 
-declare module '@react-navigation/native' {
-  interface RootNavigator extends RootStackType {}
+  const toggleTheme = React.useCallback(() => setIsThemeDark(!isThemeDark), [isThemeDark]);
+  const preferences = React.useMemo(() => ({ toggleTheme, isThemeDark }), [toggleTheme, isThemeDark]);
+
+  return (
+    <PreferencesContext.Provider value={preferences}>
+      <Navigation theme={theme} />
+    </PreferencesContext.Provider>
+  );
 }
