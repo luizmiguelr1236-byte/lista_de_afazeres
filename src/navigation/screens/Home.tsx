@@ -44,15 +44,24 @@ export function Home() {
   function enviar() {
     const novoId = id + 1;
     setID(novoId);
-
+    if(dia==""||mes==""||text==""||ano==""){
+       alert("digite valores para ser possivel registrar!!!")
+    }
+     else if(mes>'12'||mes<'1'){
+       alert("digite um mês existente")
+    }
+    else if(dia<'0'||dia>'31'){
+      alert("digite um dia existente")
+    }
+    else{
     const novaTarefa = {
       id: novoId.toString(),
       texto: `${text} - prazo: ${dia}/${mes}/${ano} - Data de criação: ${time}`,
       status: 'Pendente',
     };
-
     setDados([...dados, novaTarefa]); 
     limpar();
+  }
   }
 
   function alternarStatus(id) {
@@ -111,7 +120,7 @@ export function Home() {
                 { backgroundColor: item.status === 'Pendente' ? '#d95f5d' : '#90EE90', padding: 10, borderRadius: 5 }
               ]}>
                 <Text style={styles.cardText}>{item.texto}</Text>
-                <Text>Status: {item.status}</Text>
+                <Text>Status: {item.status} prazo:</Text>
                 <Text>--------------------------------------------------------------------------</Text>
                 <Button 
                   onPress={() => setDados(dados.filter((t) => t.id !== item.id))} 
@@ -137,6 +146,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor:'#8f8b90',
     gap: 10,
     paddingTop: 20,
   },
