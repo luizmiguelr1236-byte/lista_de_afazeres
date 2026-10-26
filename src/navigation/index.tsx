@@ -7,6 +7,7 @@ import { Image } from 'react-native';
 import bell from '../assets/bell.png';
 import newspaper from '../assets/newspaper.png';
 import { Home } from './screens/Home';
+import {Login} from './screens/usuario'
 import { NotFound } from './screens/NotFound';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
@@ -34,7 +35,19 @@ const HomeTabs = createBottomTabNavigator({
       },
     },
   },
-});
+     Login: {
+      screen: Login,
+      options: {
+        title: 'Login',
+        tabBarIcon: ({ color, size }) => (
+          <Image source={newspaper} style={{ width: size, height: size, tintColor: color }} />
+        ),
+      },
+    },
+  
+  }
+);
+ 
 
 const RootStack = createNativeStackNavigator({
   screens: {
