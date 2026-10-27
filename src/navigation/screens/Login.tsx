@@ -20,7 +20,6 @@ export function Login() {
   
 
   return (
-    
         <View style={styles.container}>
             <Text>
               Usuario:
@@ -29,8 +28,8 @@ export function Login() {
                     onChangeText={setUser}
                     value={user}
                 />
-          </Text>
-          <Text>
+         
+        
             senha:
                 <TextInput
                     style={[styles.input, { width: 280, backgroundColor:"black"}]}
@@ -43,9 +42,6 @@ export function Login() {
             <Button onPress={Logar} title="Enviar" color="#007AFF" /> 
             <Button onPress={limpar} title="Limpar" color="#841584" />
           </View>
-
-
-              
         </View>
   );
 }
