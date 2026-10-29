@@ -21,22 +21,22 @@ export function Login() {
 
   return (
         <View style={styles.container}>
-            <Text>
+            <text>
               Usuario:
                 <TextInput
                     style={[styles.input, { width: 280 }]}
                     onChangeText={setUser}
                     value={user}
                 />
-         
-        
+        </text>
+         <text>
             senha:
                 <TextInput
                     style={[styles.input, { width: 280, backgroundColor:"black"}]}
                     onChangeText={setsenha}
                     value={senha}
                 />
-            </Text>
+            </text>
 
           <View style={styles.fixToText}>
             <Button onPress={Logar} title="Enviar" color="#007AFF" /> 

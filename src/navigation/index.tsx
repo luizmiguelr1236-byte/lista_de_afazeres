@@ -34,7 +34,7 @@ const HomeTabs = createBottomTabNavigator({
         ),
       },
     },
-  },
+  
      Login: {
       screen:Login,
       options: {
@@ -46,6 +46,7 @@ const HomeTabs = createBottomTabNavigator({
     },
   
   }
+}
 );
  
 
